@@ -19,4 +19,5 @@ variable "environment" {
 variable "notification_email" {
   description = "Email address that will confirm the SNS subscription"
   type        = string
+  default     = "fahim.ahmed@bjitacademy.com"
 }

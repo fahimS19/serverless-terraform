@@ -10,18 +10,18 @@ Open [serverless-document-pipeline.html](serverless-document-pipeline.html) afte
 
 ## Project files
 
-| File | Purpose |
-| --- | --- |
-| versions.tf / provider.tf | Terraform requirements and AWS provider |
-| variables.tf / main.tf | Inputs, account data, and naming |
-| s3.tf | Private upload bucket and event notification |
-| sqs.tf | Processing queue, dead-letter queue, and S3 policy |
-| sns.tf | Notification topic and email subscription |
-| iam.tf | Lambda execution permissions |
-| lambda.tf | Function packaging, log group, and queue trigger |
-| lambda/handler.py | Metadata checks and notification |
-| outputs.tf | Resource names and URLs |
-| terraform.tfvars.example | Example configuration |
+| File                      | Purpose                                            |
+| ------------------------- | -------------------------------------------------- |
+| versions.tf / provider.tf | Terraform requirements and AWS provider            |
+| variables.tf / main.tf    | Inputs, account data, and naming                   |
+| s3.tf                     | Private upload bucket and event notification       |
+| sqs.tf                    | Processing queue, dead-letter queue, and S3 policy |
+| sns.tf                    | Notification topic and email subscription          |
+| iam.tf                    | Lambda execution permissions                       |
+| lambda.tf                 | Function packaging, log group, and queue trigger   |
+| lambda/handler.py         | Metadata checks and notification                   |
+| outputs.tf                | Resource names and URLs                            |
+| terraform.tfvars.example  | Example configuration                              |
 
 ## Deploy
 
@@ -33,7 +33,7 @@ cd serverless-document-pipeline
 cp terraform.tfvars.example terraform.tfvars
 ```
 
-Edit `notification_email` in `terraform.tfvars`. The default region is `ap-southeast-1`.
+Edit `notification_email` in `terraform.tfvars`. The default region is `us-east-1`.
 
 ```bash
 aws sts get-caller-identity
