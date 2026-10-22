@@ -1,0 +1,365 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><title>Document Pipeline — AWS + Terraform</title><style>
+:root{--bg:#080e19;--panel:#101a2a;--panel2:#142137;--border:#273550;--text:#eaf1fc;--muted:#a7b8d1;--sub:#8192ac;--mint:#55ebc1;--blue:#84aaff;--violet:#b4a0ff;--orange:#ffcb83}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 77% -8%,#12304f 0,transparent 34%),radial-gradient(circle at 9% 7%,#153445 0,transparent 24%),var(--bg);color:var(--text);font:15px/1.65 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:inherit;text-decoration:none}button{font:inherit}.shell{max-width:1450px;margin:auto;display:grid;grid-template-columns:260px minmax(0,1fr);gap:38px;padding:28px 34px 80px}.sidebar{position:sticky;top:20px;height:calc(100vh - 40px);overflow:auto;padding:15px 8px}.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:15px;letter-spacing:.04em;padding:4px 10px 31px}.logo{height:37px;width:37px;display:grid;place-items:center;background:linear-gradient(140deg,#48dfbb,#6c86fa);border-radius:10px;color:#071322;font-size:23px}.side-label{font-size:10px;letter-spacing:.2em;color:var(--sub);font-weight:800;margin:25px 10px 10px}.sidebar a{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted);padding:10px 12px;border-radius:9px}.sidebar a:hover{background:#17283c;color:white}.nav-num{font-size:11px;color:var(--mint);font-weight:800}.side-note{background:#132238;border:1px solid var(--border);border-radius:14px;padding:16px;margin:30px 5px 0;color:var(--muted);font-size:12px}.side-note b{color:var(--text)}.main{min-width:0;max-width:1080px}.eyebrow,.section-label{font-size:11px;letter-spacing:.19em;font-weight:800;color:var(--mint)}.hero{padding:48px 0 25px}.hero h1{font-size:clamp(39px,5vw,71px);letter-spacing:-.065em;line-height:1.09;max-width:840px;margin:16px 0}.gradient{background:linear-gradient(93deg,#65ecc1,#85b6ff 55%,#bfadff);color:transparent;background-clip:text}.lede{max-width:740px;color:var(--muted);font-size:17px;line-height:1.8}.tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px}.tags span{border:1px solid #38516c;border-radius:100px;font-size:12px;color:#c4d4ed;padding:5px 12px}.panel{background:linear-gradient(160deg,#122034,#101827);border:1px solid var(--border);border-radius:19px;padding:24px}.section{margin-top:55px;scroll-margin-top:18px}h2{letter-spacing:-.04em;font-size:clamp(25px,3vw,36px);margin:8px 0 12px;line-height:1.25}h3{font-size:18px;margin:0 0 9px}.section-sub{color:var(--muted);margin-bottom:22px}.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.problem-grid p{color:var(--muted);margin:0}.icon-bubble{display:inline-grid;place-items:center;background:#203552;color:var(--mint);height:36px;width:36px;border-radius:10px;margin-bottom:15px}.architecture{padding:25px;background:radial-gradient(circle at 50% 50%,#17273d,#0c1523 70%);border:1px solid var(--border);border-radius:19px;overflow:hidden}.architecture svg{width:100%;height:auto;display:block;max-height:430px}.architecture svg text{font-family:Inter,system-ui,sans-serif}.diagram-key{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px;color:var(--sub);font-size:12px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.step{border:1px solid var(--border);background:var(--panel);border-radius:13px;padding:17px}.step strong{color:var(--mint);font-size:12px}.step b{display:block;font-size:13px;margin:5px 0}.step p{font-size:12px;color:var(--muted);margin:0}.tree{background:#0c1523;border:1px solid var(--border);border-radius:14px;padding:19px 24px;white-space:pre;overflow:auto;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:13px;line-height:1.9;color:#b2d9ed}.tree .hl{color:#70f2cb}.file-section{margin-top:64px;scroll-margin-top:20px}.code-card{margin:20px 0;background:#0b1422;border:1px solid var(--border);border-radius:14px;overflow:hidden}.code-header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;background:#16243a;border-bottom:1px solid var(--border)}.file-title{display:flex;align-items:center;gap:11px;font-size:13px;font-weight:750;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.file-title small{color:var(--sub);font-size:11px;font-weight:400}.file-icon{font-size:15px;color:var(--mint)}.copy,.copy-cli{background:#233754;color:#e1f1ff;border:1px solid #3c5473;border-radius:7px;padding:6px 12px;font-size:12px;cursor:pointer;transition:.15s}.copy:hover,.copy-cli:hover{background:#315073}.copy.copied,.copy-cli.copied{color:#77f5ce;border-color:#3ba487}pre{margin:0;padding:18px 21px;overflow:auto;font:12px/1.75 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:2;color:#c7dcf1;white-space:pre}code{font-family:inherit}.command{position:relative;background:#101b2b;border:1px solid var(--border);border-radius:11px;margin:14px 0;overflow:hidden}.command pre{padding-right:110px;color:#c4f5db}.copy-cli{position:absolute;right:12px;top:10px}.note{padding:17px 20px;border-left:3px solid var(--orange);background:#3a2b202e;color:#e5d5c4;border-radius:0 10px 10px 0;font-size:13px}.callout{border:1px solid #326756;background:#153c33;border-radius:12px;color:#bbf7dc;padding:18px 20px;margin-top:20px}.footer{color:var(--sub);text-align:center;border-top:1px solid var(--border);padding:45px 10px;margin-top:65px;font-size:12px}table{border-collapse:collapse;width:100%;font-size:13px}th,td{padding:13px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}th{color:var(--muted)}td{color:#d6e3f7}@media(max-width:1000px){.shell{grid-template-columns:1fr;gap:0;padding:18px 20px}.sidebar{position:static;height:auto;padding:0 0 5px}.brand{padding:0}.sidebar nav,.sidebar .side-label,.side-note{display:none}.hero{padding-top:25px}.steps{grid-template-columns:repeat(2,1fr)}}@media(max-width:620px){.problem-grid,.steps{grid-template-columns:1fr}.hero h1{font-size:42px}.panel,.architecture{padding:17px}.shell{padding:15px}.file-title small{display:none}.architecture{overflow-x:auto}.architecture svg{min-width:580px}}@media print{.sidebar,.copy,.copy-cli{display:none}.shell{display:block;padding:0}.code-card{break-inside:avoid}body{background:white;color:black}.panel,.code-card,.step{background:white;color:black}}
+</style></head><body><div class="shell"><aside class="sidebar"><div class="brand"><span class="logo">⬡</span><span>CLOUD / BLUEPRINTS</span></div><div class="side-label">PROJECT</div><nav><a href="#overview"><span class="nav-num">01</span>Overview</a><a href="#architecture"><span class="nav-num">02</span>Architecture</a><a href="#structure"><span class="nav-num">03</span>Folder structure</a><a href="#quickstart"><span class="nav-num">04</span>Quick start</a></nav><div class="side-label">TERRAFORM FILES</div><nav><a href="#sec0"><span class="nav-num">01</span>Core configuration</a><a href="#sec1"><span class="nav-num">02</span>Storage and messaging</a><a href="#sec2"><span class="nav-num">03</span>Compute and security</a><a href="#sec3"><span class="nav-num">04</span>Outputs and local files</a></nav><div class="side-label">OPERATIONS</div><nav><a href="#test"><span class="nav-num">05</span>Test &amp; troubleshoot</a><a href="#cleanup"><span class="nav-num">06</span>Cleanup</a></nav><div class="side-note"><b>Design goal</b><br>Small enough to understand, complete enough to deploy. Every code block has its own copy control.</div></aside><main class="main"><div class="hero" id="overview"><div class="eyebrow">AWS · TERRAFORM · EVENT-DRIVEN ARCHITECTURE</div><h1>Serverless<br><span class="gradient">Document Pipeline.</span></h1><p class="lede">A practical cloud architecture that detects uploaded documents, validates basic file metadata, and sends email notifications—with buffering, retries, and dead-letter handling built in.</p><div class="tags"><span>S3</span><span>SQS + DLQ</span><span>Lambda</span><span>SNS</span><span>CloudWatch</span><span>IAM</span><span>Terraform</span></div></div>
+<section class="section" id="problem"><div class="section-label">01 / THE USE CASE</div><h2>The problem &amp; solution</h2><div class="problem-grid"><div class="panel"><span class="icon-bubble">!</span><h3>Before: manual document checks</h3><p>A business receives invoices and application forms. Team members check for uploads, inspect them manually, and message colleagues. New files may be missed; failed tasks are difficult to recover.</p></div><div class="panel"><span class="icon-bubble">✓</span><h3>After: event-driven processing</h3><p>Uploading a file automatically queues a task. Lambda checks file metadata and publishes an outcome to SNS. Failed executions are retried and finally routed to a dead-letter queue.</p></div></div></section>
+<section class="section" id="architecture"><div class="section-label">02 / SYSTEM DESIGN</div><h2>Architecture</h2><p class="section-sub">An upload initiates the workflow. SQS decouples object storage from compute, and SNS decouples compute from notifications.</p><div class="architecture"><svg viewBox="0 0 870 330" role="img" aria-label="File upload to S3, queue to SQS, Lambda processing, SNS email notification, SQS dead letter queue for failed processing"><defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#8fa7c6"/></marker><marker id="arrred" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#ff9c9c"/></marker></defs>
+<g fill="none" stroke="#8fa7c6" stroke-width="2" marker-end="url(#arr)"><path d="M128 123H176"/><path d="M307 123H358"/><path d="M493 123H542"/><path d="M674 123H723"/></g><path d="M419 160V238H346" fill="none" stroke="#ff9c9c" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrred)"/><g text-anchor="middle"><rect x="10" y="86" width="118" height="74" rx="12" fill="#182c40" stroke="#7390b8"/><text x="69" y="117" fill="#eff7ff" font-size="15" font-weight="700">Upload</text><text x="69" y="137" fill="#b2c7df" font-size="11">User / CLI</text><rect x="176" y="86" width="131" height="74" rx="12" fill="#123c33" stroke="#47d7ad"/><text x="241" y="114" fill="#a7f7d5" font-size="15" font-weight="700">Amazon S3</text><text x="241" y="135" fill="#b2dbc9" font-size="11">uploads/</text><rect x="358" y="86" width="135" height="74" rx="12" fill="#43301f" stroke="#e4a962"/><text x="425" y="114" fill="#ffdeb1" font-size="15" font-weight="700">Amazon SQS</text><text x="425" y="135" fill="#e7cdae" font-size="11">Main queue</text><rect x="542" y="86" width="132" height="74" rx="12" fill="#342a48" stroke="#b69aef"/><text x="608" y="114" fill="#e0d4ff" font-size="15" font-weight="700">AWS Lambda</text><text x="608" y="135" fill="#c9b8ec" font-size="11">Validate metadata</text><rect x="723" y="86" width="138" height="74" rx="12" fill="#40283d" stroke="#e9a0d1"/><text x="792" y="114" fill="#ffd2f0" font-size="15" font-weight="700">Amazon SNS</text><text x="792" y="135" fill="#f3c5e3" font-size="11">Email subscriber</text><rect x="204" y="203" width="142" height="73" rx="12" fill="#43272c" stroke="#ef8e98"/><text x="275" y="233" fill="#ffccd2" font-size="15" font-weight="700">SQS DLQ</text><text x="275" y="253" fill="#e7b4bc" font-size="11">Exhausted retries</text></g><g fill="#92a5bd" font-size="10" text-anchor="middle"><text x="151" y="109">file</text><text x="333" y="109">event</text><text x="518" y="109">poll</text><text x="698" y="109">result</text><text x="383" y="199">failed</text></g><text x="440" y="311" fill="#8199b8" font-size="12" text-anchor="middle">Cross-cutting: IAM permissions · CloudWatch logs · Terraform-managed resources</text></svg><div class="diagram-key"><span><i class="dot" style="background:#47d7ad"></i>Object storage</span><span><i class="dot" style="background:#e4a962"></i>Asynchronous messaging</span><span><i class="dot" style="background:#b69aef"></i>Compute</span><span><i class="dot" style="background:#e9a0d1"></i>Notifications</span><span><i class="dot" style="background:#ef8e98"></i>Failure handling</span></div></div><div class="section" style="margin-top:25px"><div class="steps"><div class="step"><strong>01</strong><b>Upload</b><p>Put a PDF, JPG, or PNG under <code>uploads/</code>.</p></div><div class="step"><strong>02</strong><b>Enqueue</b><p>S3 sends an object-created event to SQS.</p></div><div class="step"><strong>03</strong><b>Process</b><p>Lambda polls SQS and checks object metadata.</p></div><div class="step"><strong>04</strong><b>Notify</b><p>SNS publishes the outcome to email.</p></div><div class="step"><strong>05</strong><b>Recover</b><p>Repeated failures are delivered to the DLQ.</p></div></div></div><div class="note" style="margin-top:20px">Standard SQS and S3 notifications can deliver duplicates. This demo is intentionally simple; a production service should make processing and notifications idempotent. Validation checks filename extension and size only—not the actual file contents.</div></section>
+<section class="section" id="structure"><div class="section-label">03 / REPOSITORY LAYOUT</div><h2>Project folder structure</h2><div class="tree">serverless-document-project/
+├── versions.tf
+├── provider.tf
+├── variables.tf
+├── main.tf
+├── s3.tf
+├── sqs.tf
+├── sns.tf
+├── iam.tf
+├── lambda.tf
+├── outputs.tf
+├── terraform.tfvars.example
+├── .gitignore
+└── lambda/
+    └── handler.py</div><p class="section-sub" style="margin-top:16px">Terraform automatically loads all <code>*.tf</code> files in the same working directory. File separation is for clarity, not execution order.</p></section>
+<section class="section" id="quickstart"><div class="section-label">04 / GET STARTED</div><h2>Prerequisites &amp; commands</h2><p class="section-sub">Install Terraform and AWS CLI, then configure AWS credentials with permissions to create S3, SQS, SNS, Lambda, IAM, and CloudWatch resources. Commands below run from the project root.</p><div class="command"><button class="copy-cli">Copy</button><pre>aws sts get-caller-identity
+cp terraform.tfvars.example terraform.tfvars
+# Edit terraform.tfvars and use your real email address.
+terraform init
+terraform fmt -recursive
+terraform validate
+terraform plan
+terraform apply</pre></div><div class="callout">Important: SNS sends a subscription confirmation email. Open the email and confirm the subscription before testing notifications.</div></section>
+<section class="file-section" id="sec0"><div class="section-label">01 / IMPLEMENTATION</div><h2>Core configuration</h2><div class="section-sub">Copy each file into the matching path in your project.</div><article class="code-card"><header class="code-header"><div class="file-title"><span class="file-icon">{}</span><span>versions.tf</span><small>13 lines</small></div><button class="copy" data-file="versions.tf" aria-label="Copy versions.tf">Copy code</button></header><pre><code>terraform {
+  required_version = &quot;&gt;= 1.6.0&quot;
+  required_providers {
+    aws = {
+      source  = &quot;hashicorp/aws&quot;
+      version = &quot;~&gt; 5.0&quot;
+    }
+    archive = {
+      source  = &quot;hashicorp/archive&quot;
+      version = &quot;~&gt; 2.4&quot;
+    }
+  }
+}
+</code></pre></article><article class="code-card"><header class="code-header"><div class="file-title"><span class="file-icon">{}</span><span>provider.tf</span><small>11 lines</small></div><button class="copy" data-file="provider.tf" aria-label="Copy provider.tf">Copy code</button></header><pre><code>provider &quot;aws&quot; {
+  region = var.aws_region
+
+  default_tags {
+    tags = {
+      Project     = var.project_name
+      Environment = var.environment
+      ManagedBy   = &quot;Terraform&quot;
+    }
+  }
+}
+</code></pre></article><article class="code-card"><header class="code-header"><div class="file-title"><span class="file-icon">{}</span><span>variables.tf</span><small>22 lines</small></div><button class="copy" data-file="variables.tf" aria-label="Copy variables.tf">Copy code</button></header><pre><code>variable &quot;aws_region&quot; {
+  description = &quot;AWS Region used by all services&quot;
+  type        = string
+  default     = &quot;ap-southeast-1&quot;
+}
+
+variable &quot;project_name&quot; {
+  description = &quot;Short, lowercase prefix used for resource names&quot;
+  type        = string
+  default     = &quot;document-pipeline&quot;
+}
+
+variable &quot;environment&quot; {
+  description = &quot;Deployment environment&quot;
+  type        = string
+  default     = &quot;demo&quot;
+}
+
+variable &quot;notification_email&quot; {
+  description = &quot;Email address that will confirm the SNS subscription&quot;
+  type        = string
+}
+</code></pre></article><article class="code-card"><header class="code-header"><div class="file-title"><span class="file-icon">{}</span><span>main.tf</span><small>9 lines</small></div><button class="copy" data-file="main.tf" aria-label="Copy main.tf">Copy code</button></header><pre><code>data &quot;aws_caller_identity&quot; &quot;current&quot; {}
+
+data &quot;aws_partition&quot; &quot;current&quot; {}
+
+locals {
+  prefix = &quot;${var.project_name}-${var.environment}&quot;
+  # Account ID makes the bucket name globally unique in typical demo setups.
+  bucket_name = &quot;${local.prefix}-${data.aws_caller_identity.current.account_id}-${var.aws_region}&quot;
+}
+</code></pre></article></section><section class="file-section" id="sec1"><div class="section-label">02 / IMPLEMENTATION</div><h2>Storage and messaging</h2><div class="section-sub">Copy each file into the matching path in your project.</div><article class="code-card"><header class="code-header"><div class="file-title"><span class="file-icon">{}</span><span>s3.tf</span><small>34 lines</small></div><button class="copy" data-file="s3.tf" aria-label="Copy s3.tf">Copy code</button></header><pre><code>resource &quot;aws_s3_bucket&quot; &quot;documents&quot; {
+  bucket        = local.bucket_name
+  force_destroy = false
+}
+
+resource &quot;aws_s3_bucket_public_access_block&quot; &quot;documents&quot; {
+  bucket                  = aws_s3_bucket.documents.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource &quot;aws_s3_bucket_server_side_encryption_configuration&quot; &quot;documents&quot; {
+  bucket = aws_s3_bucket.documents.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = &quot;AES256&quot;
+    }
+  }
+}
+
+resource &quot;aws_s3_bucket_notification&quot; &quot;uploads&quot; {
+  bucket = aws_s3_bucket.documents.id
+
+  queue {
+    queue_arn     = aws_sqs_queue.processing.arn
+    events        = [&quot;s3:ObjectCreated:*&quot;]
+    filter_prefix = &quot;uploads/&quot;
+  }
+
+  depends_on = [aws_sqs_queue_policy.allow_s3]
+}
+</code></pre></article><article class="code-card"><header class="code-header"><div class="file-title"><span class="file-icon">{}</span><span>sqs.tf</span><small>47 lines</small></div><button class="copy" data-file="sqs.tf" aria-label="Copy sqs.tf">Copy code</button></header><pre><code>resource &quot;aws_sqs_queue&quot; &quot;dead_letter&quot; {
+  name                      = &quot;${local.prefix}-dlq&quot;
+  message_retention_seconds = 1209600 # 14 days
+}
+
+resource &quot;aws_sqs_queue&quot; &quot;processing&quot; {
+  name                       = &quot;${local.prefix}-queue&quot;
+  visibility_timeout_seconds = 60
+  message_retention_seconds  = 345600 # 4 days
+
+  redrive_policy = jsonencode({
+    deadLetterTargetArn = aws_sqs_queue.dead_letter.arn
+    maxReceiveCount     = 3
+  })
+}
+
+# S3 publishes event notifications to the queue.
+data &quot;aws_iam_policy_document&quot; &quot;allow_s3_queue&quot; {
+  statement {
+    sid     = &quot;AllowS3Events&quot;
+    effect  = &quot;Allow&quot;
+    actions = [&quot;sqs:SendMessage&quot;]
+    resources = [aws_sqs_queue.processing.arn]
+
+    principals {
+      type        = &quot;Service&quot;
+      identifiers = [&quot;s3.amazonaws.com&quot;]
+    }
+
+    condition {
+      test     = &quot;ArnEquals&quot;
+      variable = &quot;aws:SourceArn&quot;
+      values   = [aws_s3_bucket.documents.arn]
+    }
+
+    condition {
+      test     = &quot;StringEquals&quot;
+      variable = &quot;aws:SourceAccount&quot;
+      values   = [data.aws_caller_identity.current.account_id]
+    }
+  }
+}
+
+resource &quot;aws_sqs_queue_policy&quot; &quot;allow_s3&quot; {
+  queue_url = aws_sqs_queue.processing.id
+  policy    = data.aws_iam_policy_document.allow_s3_queue.json
+}
+</code></pre></article><article class="code-card"><header class="code-header"><div class="file-title"><span class="file-icon">{}</span><span>sns.tf</span><small>9 lines</small></div><button class="copy" data-file="sns.tf" aria-label="Copy sns.tf">Copy code</button></header><pre><code>resource &quot;aws_sns_topic&quot; &quot;notifications&quot; {
+  name = &quot;${local.prefix}-notifications&quot;
+}
+
+resource &quot;aws_sns_topic_subscription&quot; &quot;email&quot; {
+  topic_arn = aws_sns_topic.notifications.arn
+  protocol  = &quot;email&quot;
+  endpoint  = var.notification_email
+}
+</code></pre></article></section><section class="file-section" id="sec2"><div class="section-label">03 / IMPLEMENTATION</div><h2>Compute and security</h2><div class="section-sub">Copy each file into the matching path in your project.</div><article class="code-card"><header class="code-header"><div class="file-title"><span class="file-icon">{}</span><span>iam.tf</span><small>49 lines</small></div><button class="copy" data-file="iam.tf" aria-label="Copy iam.tf">Copy code</button></header><pre><code>data &quot;aws_iam_policy_document&quot; &quot;lambda_assume_role&quot; {
+  statement {
+    actions = [&quot;sts:AssumeRole&quot;]
+    principals {
+      type        = &quot;Service&quot;
+      identifiers = [&quot;lambda.amazonaws.com&quot;]
+    }
+  }
+}
+
+resource &quot;aws_iam_role&quot; &quot;lambda&quot; {
+  name               = &quot;${local.prefix}-lambda-role&quot;
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
+}
+
+resource &quot;aws_iam_role_policy_attachment&quot; &quot;basic_logs&quot; {
+  role       = aws_iam_role.lambda.name
+  policy_arn = &quot;arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole&quot;
+}
+
+# Lambda&#x27;s SQS event source mapping requires read/delete permissions.
+data &quot;aws_iam_policy_document&quot; &quot;lambda_access&quot; {
+  statement {
+    sid = &quot;ReadQueue&quot;
+    actions = [
+      &quot;sqs:ReceiveMessage&quot;, &quot;sqs:DeleteMessage&quot;,
+      &quot;sqs:GetQueueAttributes&quot;
+    ]
+    resources = [aws_sqs_queue.processing.arn]
+  }
+
+  statement {
+    sid       = &quot;ReadUploadedObjectMetadata&quot;
+    actions   = [&quot;s3:GetObject&quot;]
+    resources = [&quot;${aws_s3_bucket.documents.arn}/uploads/*&quot;]
+  }
+
+  statement {
+    sid       = &quot;PublishNotification&quot;
+    actions   = [&quot;sns:Publish&quot;]
+    resources = [aws_sns_topic.notifications.arn]
+  }
+}
+
+resource &quot;aws_iam_role_policy&quot; &quot;lambda_access&quot; {
+  name   = &quot;${local.prefix}-lambda-access&quot;
+  role   = aws_iam_role.lambda.id
+  policy = data.aws_iam_policy_document.lambda_access.json
+}
+</code></pre></article><article class="code-card"><header class="code-header"><div class="file-title"><span class="file-icon">{}</span><span>lambda.tf</span><small>41 lines</small></div><button class="copy" data-file="lambda.tf" aria-label="Copy lambda.tf">Copy code</button></header><pre><code>data &quot;archive_file&quot; &quot;processor&quot; {
+  type        = &quot;zip&quot;
+  source_file = &quot;${path.module}/lambda/handler.py&quot;
+  output_path = &quot;${path.module}/processor.zip&quot;
+}
+
+resource &quot;aws_cloudwatch_log_group&quot; &quot;processor&quot; {
+  name              = &quot;/aws/lambda/${local.prefix}-processor&quot;
+  retention_in_days = 7
+}
+
+resource &quot;aws_lambda_function&quot; &quot;processor&quot; {
+  function_name    = &quot;${local.prefix}-processor&quot;
+  filename         = data.archive_file.processor.output_path
+  source_code_hash = data.archive_file.processor.output_base64sha256
+  handler          = &quot;handler.lambda_handler&quot;
+  runtime          = &quot;python3.12&quot;
+  role             = aws_iam_role.lambda.arn
+  timeout          = 10
+  memory_size      = 128
+
+  environment {
+    variables = {
+      TOPIC_ARN = aws_sns_topic.notifications.arn
+      MAX_BYTES = &quot;5242880&quot; # 5 MiB
+    }
+  }
+
+  depends_on = [
+    aws_cloudwatch_log_group.processor,
+    aws_iam_role_policy_attachment.basic_logs,
+    aws_iam_role_policy.lambda_access
+  ]
+}
+
+resource &quot;aws_lambda_event_source_mapping&quot; &quot;sqs&quot; {
+  event_source_arn = aws_sqs_queue.processing.arn
+  function_name    = aws_lambda_function.processor.arn
+  batch_size       = 1
+  enabled          = true
+}
+</code></pre></article><article class="code-card"><header class="code-header"><div class="file-title"><span class="file-icon">λ</span><span>lambda/handler.py</span><small>49 lines</small></div><button class="copy" data-file="lambda/handler.py" aria-label="Copy lambda/handler.py">Copy code</button></header><pre><code>import json
+import logging
+import os
+from urllib.parse import unquote_plus
+
+import boto3
+
+log = logging.getLogger()
+log.setLevel(logging.INFO)
+s3 = boto3.client(&quot;s3&quot;)
+sns = boto3.client(&quot;sns&quot;)
+TOPIC_ARN = os.environ[&quot;TOPIC_ARN&quot;]
+MAX_BYTES = int(os.environ.get(&quot;MAX_BYTES&quot;, &quot;5242880&quot;))
+ALLOWED_EXTENSIONS = (&quot;.pdf&quot;, &quot;.jpg&quot;, &quot;.png&quot;)
+
+
+def lambda_handler(event, context):
+    # Batch size is 1, so an unhandled exception retries this SQS message.
+    for sqs_record in event[&quot;Records&quot;]:
+        envelope = json.loads(sqs_record[&quot;body&quot;])
+        for s3_record in envelope.get(&quot;Records&quot;, []):
+            bucket = s3_record[&quot;s3&quot;][&quot;bucket&quot;][&quot;name&quot;]
+            key = unquote_plus(s3_record[&quot;s3&quot;][&quot;object&quot;][&quot;key&quot;])
+
+            # Ignore any unexpected event outside our upload prefix.
+            if not key.startswith(&quot;uploads/&quot;):
+                continue
+
+            # HEAD returns metadata without downloading the document.
+            metadata = s3.head_object(Bucket=bucket, Key=key)
+            size = metadata[&quot;ContentLength&quot;]
+            valid_type = key.lower().endswith(ALLOWED_EXTENSIONS)
+            status = &quot;SUCCESS&quot; if valid_type and 0 &lt; size &lt;= MAX_BYTES else &quot;REJECTED&quot;
+
+            message = (
+                f&quot;File: {key}\n&quot;
+                f&quot;Bucket: {bucket}\n&quot;
+                f&quot;Size: {size} bytes\n&quot;
+                f&quot;Status: {status}\n&quot;
+                &quot;Validation: extension is PDF/JPG/PNG and size is 1 byte to 5 MiB&quot;
+            )
+            sns.publish(
+                TopicArn=TOPIC_ARN,
+                Subject=f&quot;Document validation: {status}&quot;,
+                Message=message,
+            )
+            log.info(&quot;Processed bucket=%s key=%s status=%s&quot;, bucket, key, status)
+
+    return {&quot;statusCode&quot;: 200, &quot;message&quot;: &quot;SQS batch completed&quot;}
+</code></pre></article></section><section class="file-section" id="sec3"><div class="section-label">04 / IMPLEMENTATION</div><h2>Outputs and local files</h2><div class="section-sub">Copy each file into the matching path in your project.</div><article class="code-card"><header class="code-header"><div class="file-title"><span class="file-icon">{}</span><span>outputs.tf</span><small>23 lines</small></div><button class="copy" data-file="outputs.tf" aria-label="Copy outputs.tf">Copy code</button></header><pre><code>output &quot;bucket_name&quot; {
+  value = aws_s3_bucket.documents.bucket
+}
+
+output &quot;queue_url&quot; {
+  value = aws_sqs_queue.processing.url
+}
+
+output &quot;dead_letter_queue_url&quot; {
+  value = aws_sqs_queue.dead_letter.url
+}
+
+output &quot;lambda_function_name&quot; {
+  value = aws_lambda_function.processor.function_name
+}
+
+output &quot;sns_topic_arn&quot; {
+  value = aws_sns_topic.notifications.arn
+}
+
+output &quot;aws_region&quot; {
+  value = var.aws_region
+}
+</code></pre></article><article class="code-card"><header class="code-header"><div class="file-title"><span class="file-icon">{}</span><span>terraform.tfvars.example</span><small>4 lines</small></div><button class="copy" data-file="terraform.tfvars.example" aria-label="Copy terraform.tfvars.example">Copy code</button></header><pre><code>aws_region         = &quot;ap-southeast-1&quot;
+project_name       = &quot;document-pipeline&quot;
+environment        = &quot;demo&quot;
+notification_email = &quot;you@example.com&quot;
+</code></pre></article><article class="code-card"><header class="code-header"><div class="file-title"><span class="file-icon">{}</span><span>.gitignore</span><small>13 lines</small></div><button class="copy" data-file=".gitignore" aria-label="Copy .gitignore">Copy code</button></header><pre><code># Terraform state and local files
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+*.tfvars
+!terraform.tfvars.example
+
+# Build artifact
+processor.zip
+
+# Keep provider lock file committed for reproducibility.
+</code></pre></article></section>
+<section class="section" id="test"><div class="section-label">05 / VERIFY</div><h2>Test the workflow</h2><p class="section-sub">Once the SNS subscription is confirmed, upload a sample PDF, image, or other local test file. The <code>uploads/</code> path matters.</p><div class="command"><button class="copy-cli">Copy</button><pre># Create any local file for the demo and upload it as a PDF name.
+printf 'test document\n' > demo.pdf
+aws s3 cp demo.pdf "s3://$(terraform output -raw bucket_name)/uploads/demo.pdf" \
+  --region "$(terraform output -raw aws_region)"
+
+# View Lambda logs (after the first invocation).
+aws logs tail "/aws/lambda/$(terraform output -raw lambda_function_name)" \
+  --follow --region "$(terraform output -raw aws_region)"</pre></div><div class="note">The small <code>demo.pdf</code> created above is a text file with a PDF extension. This project validates metadata only and will accept it as a demo input. It is not a valid PDF document.</div><h3 style="margin-top:30px">Expected result</h3><table><thead><tr><th>Component</th><th>What to verify</th></tr></thead><tbody><tr><td>S3</td><td><code>uploads/demo.pdf</code> appears in the bucket</td></tr><tr><td>SQS</td><td>Message is consumed by Lambda; queue should eventually drain</td></tr><tr><td>Lambda / Logs</td><td>Processed file and <code>SUCCESS</code> appear in logs</td></tr><tr><td>SNS</td><td>Confirmed subscriber receives a validation email</td></tr><tr><td>DLQ</td><td>Normally empty; receives messages after repeated failures</td></tr></tbody></table><h3 style="margin-top:30px">Common issues</h3><table><tbody><tr><td>No email</td><td>Confirm SNS subscription and inspect Lambda logs.</td></tr><tr><td>No Lambda invocation</td><td>Upload under <code>uploads/</code>, check S3 notification and SQS policy.</td></tr><tr><td>Message keeps retrying</td><td>Inspect Lambda error and role permissions; review DLQ.</td></tr><tr><td>Object not found</td><td>Check key decoding and whether the object was moved or deleted.</td></tr></tbody></table></section>
+<section class="section" id="cleanup"><div class="section-label">06 / CLEANUP</div><h2>Destroy the demo infrastructure</h2><p class="section-sub">Empty the S3 bucket before destroying. This avoids errors because the bucket intentionally has <code>force_destroy = false</code>.</p><div class="command"><button class="copy-cli">Copy</button><pre>aws s3 rm "s3://$(terraform output -raw bucket_name)" --recursive \
+  --region "$(terraform output -raw aws_region)"
+terraform destroy</pre></div><div class="note">AWS charges can apply even to a small demo. Use a sandbox account, inspect the plan, and destroy resources when finished. Terraform state may contain sensitive data; do not commit it to version control. SQS-to-Lambda processing is at least once, so email notifications can be duplicated.</div></section><div class="footer">SERVERLESS DOCUMENT PIPELINE · AWS + TERRAFORM · SELF-CONTAINED PROJECT REFERENCE</div></main></div><script>const FILES={"versions.tf": "terraform {\n  required_version = \">= 1.6.0\"\n  required_providers {\n    aws = {\n      source  = \"hashicorp/aws\"\n      version = \"~> 5.0\"\n    }\n    archive = {\n      source  = \"hashicorp/archive\"\n      version = \"~> 2.4\"\n    }\n  }\n}\n", "provider.tf": "provider \"aws\" {\n  region = var.aws_region\n\n  default_tags {\n    tags = {\n      Project     = var.project_name\n      Environment = var.environment\n      ManagedBy   = \"Terraform\"\n    }\n  }\n}\n", "variables.tf": "variable \"aws_region\" {\n  description = \"AWS Region used by all services\"\n  type        = string\n  default     = \"ap-southeast-1\"\n}\n\nvariable \"project_name\" {\n  description = \"Short, lowercase prefix used for resource names\"\n  type        = string\n  default     = \"document-pipeline\"\n}\n\nvariable \"environment\" {\n  description = \"Deployment environment\"\n  type        = string\n  default     = \"demo\"\n}\n\nvariable \"notification_email\" {\n  description = \"Email address that will confirm the SNS subscription\"\n  type        = string\n}\n", "main.tf": "data \"aws_caller_identity\" \"current\" {}\n\ndata \"aws_partition\" \"current\" {}\n\nlocals {\n  prefix = \"${var.project_name}-${var.environment}\"\n  # Account ID makes the bucket name globally unique in typical demo setups.\n  bucket_name = \"${local.prefix}-${data.aws_caller_identity.current.account_id}-${var.aws_region}\"\n}\n", "s3.tf": "resource \"aws_s3_bucket\" \"documents\" {\n  bucket        = local.bucket_name\n  force_destroy = false\n}\n\nresource \"aws_s3_bucket_public_access_block\" \"documents\" {\n  bucket                  = aws_s3_bucket.documents.id\n  block_public_acls       = true\n  block_public_policy     = true\n  ignore_public_acls      = true\n  restrict_public_buckets = true\n}\n\nresource \"aws_s3_bucket_server_side_encryption_configuration\" \"documents\" {\n  bucket = aws_s3_bucket.documents.id\n\n  rule {\n    apply_server_side_encryption_by_default {\n      sse_algorithm = \"AES256\"\n    }\n  }\n}\n\nresource \"aws_s3_bucket_notification\" \"uploads\" {\n  bucket = aws_s3_bucket.documents.id\n\n  queue {\n    queue_arn     = aws_sqs_queue.processing.arn\n    events        = [\"s3:ObjectCreated:*\"]\n    filter_prefix = \"uploads/\"\n  }\n\n  depends_on = [aws_sqs_queue_policy.allow_s3]\n}\n", "sqs.tf": "resource \"aws_sqs_queue\" \"dead_letter\" {\n  name                      = \"${local.prefix}-dlq\"\n  message_retention_seconds = 1209600 # 14 days\n}\n\nresource \"aws_sqs_queue\" \"processing\" {\n  name                       = \"${local.prefix}-queue\"\n  visibility_timeout_seconds = 60\n  message_retention_seconds  = 345600 # 4 days\n\n  redrive_policy = jsonencode({\n    deadLetterTargetArn = aws_sqs_queue.dead_letter.arn\n    maxReceiveCount     = 3\n  })\n}\n\n# S3 publishes event notifications to the queue.\ndata \"aws_iam_policy_document\" \"allow_s3_queue\" {\n  statement {\n    sid     = \"AllowS3Events\"\n    effect  = \"Allow\"\n    actions = [\"sqs:SendMessage\"]\n    resources = [aws_sqs_queue.processing.arn]\n\n    principals {\n      type        = \"Service\"\n      identifiers = [\"s3.amazonaws.com\"]\n    }\n\n    condition {\n      test     = \"ArnEquals\"\n      variable = \"aws:SourceArn\"\n      values   = [aws_s3_bucket.documents.arn]\n    }\n\n    condition {\n      test     = \"StringEquals\"\n      variable = \"aws:SourceAccount\"\n      values   = [data.aws_caller_identity.current.account_id]\n    }\n  }\n}\n\nresource \"aws_sqs_queue_policy\" \"allow_s3\" {\n  queue_url = aws_sqs_queue.processing.id\n  policy    = data.aws_iam_policy_document.allow_s3_queue.json\n}\n", "sns.tf": "resource \"aws_sns_topic\" \"notifications\" {\n  name = \"${local.prefix}-notifications\"\n}\n\nresource \"aws_sns_topic_subscription\" \"email\" {\n  topic_arn = aws_sns_topic.notifications.arn\n  protocol  = \"email\"\n  endpoint  = var.notification_email\n}\n", "iam.tf": "data \"aws_iam_policy_document\" \"lambda_assume_role\" {\n  statement {\n    actions = [\"sts:AssumeRole\"]\n    principals {\n      type        = \"Service\"\n      identifiers = [\"lambda.amazonaws.com\"]\n    }\n  }\n}\n\nresource \"aws_iam_role\" \"lambda\" {\n  name               = \"${local.prefix}-lambda-role\"\n  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json\n}\n\nresource \"aws_iam_role_policy_attachment\" \"basic_logs\" {\n  role       = aws_iam_role.lambda.name\n  policy_arn = \"arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole\"\n}\n\n# Lambda's SQS event source mapping requires read/delete permissions.\ndata \"aws_iam_policy_document\" \"lambda_access\" {\n  statement {\n    sid = \"ReadQueue\"\n    actions = [\n      \"sqs:ReceiveMessage\", \"sqs:DeleteMessage\",\n      \"sqs:GetQueueAttributes\"\n    ]\n    resources = [aws_sqs_queue.processing.arn]\n  }\n\n  statement {\n    sid       = \"ReadUploadedObjectMetadata\"\n    actions   = [\"s3:GetObject\"]\n    resources = [\"${aws_s3_bucket.documents.arn}/uploads/*\"]\n  }\n\n  statement {\n    sid       = \"PublishNotification\"\n    actions   = [\"sns:Publish\"]\n    resources = [aws_sns_topic.notifications.arn]\n  }\n}\n\nresource \"aws_iam_role_policy\" \"lambda_access\" {\n  name   = \"${local.prefix}-lambda-access\"\n  role   = aws_iam_role.lambda.id\n  policy = data.aws_iam_policy_document.lambda_access.json\n}\n", "lambda.tf": "data \"archive_file\" \"processor\" {\n  type        = \"zip\"\n  source_file = \"${path.module}/lambda/handler.py\"\n  output_path = \"${path.module}/processor.zip\"\n}\n\nresource \"aws_cloudwatch_log_group\" \"processor\" {\n  name              = \"/aws/lambda/${local.prefix}-processor\"\n  retention_in_days = 7\n}\n\nresource \"aws_lambda_function\" \"processor\" {\n  function_name    = \"${local.prefix}-processor\"\n  filename         = data.archive_file.processor.output_path\n  source_code_hash = data.archive_file.processor.output_base64sha256\n  handler          = \"handler.lambda_handler\"\n  runtime          = \"python3.12\"\n  role             = aws_iam_role.lambda.arn\n  timeout          = 10\n  memory_size      = 128\n\n  environment {\n    variables = {\n      TOPIC_ARN = aws_sns_topic.notifications.arn\n      MAX_BYTES = \"5242880\" # 5 MiB\n    }\n  }\n\n  depends_on = [\n    aws_cloudwatch_log_group.processor,\n    aws_iam_role_policy_attachment.basic_logs,\n    aws_iam_role_policy.lambda_access\n  ]\n}\n\nresource \"aws_lambda_event_source_mapping\" \"sqs\" {\n  event_source_arn = aws_sqs_queue.processing.arn\n  function_name    = aws_lambda_function.processor.arn\n  batch_size       = 1\n  enabled          = true\n}\n", "outputs.tf": "output \"bucket_name\" {\n  value = aws_s3_bucket.documents.bucket\n}\n\noutput \"queue_url\" {\n  value = aws_sqs_queue.processing.url\n}\n\noutput \"dead_letter_queue_url\" {\n  value = aws_sqs_queue.dead_letter.url\n}\n\noutput \"lambda_function_name\" {\n  value = aws_lambda_function.processor.function_name\n}\n\noutput \"sns_topic_arn\" {\n  value = aws_sns_topic.notifications.arn\n}\n\noutput \"aws_region\" {\n  value = var.aws_region\n}\n", "terraform.tfvars.example": "aws_region         = \"ap-southeast-1\"\nproject_name       = \"document-pipeline\"\nenvironment        = \"demo\"\nnotification_email = \"you@example.com\"\n", ".gitignore": "# Terraform state and local files\n.terraform/\n*.tfstate\n*.tfstate.*\n*.tfplan\ncrash.log\n*.tfvars\n!terraform.tfvars.example\n\n# Build artifact\nprocessor.zip\n\n# Keep provider lock file committed for reproducibility.\n", "lambda/handler.py": "import json\nimport logging\nimport os\nfrom urllib.parse import unquote_plus\n\nimport boto3\n\nlog = logging.getLogger()\nlog.setLevel(logging.INFO)\ns3 = boto3.client(\"s3\")\nsns = boto3.client(\"sns\")\nTOPIC_ARN = os.environ[\"TOPIC_ARN\"]\nMAX_BYTES = int(os.environ.get(\"MAX_BYTES\", \"5242880\"))\nALLOWED_EXTENSIONS = (\".pdf\", \".jpg\", \".png\")\n\n\ndef lambda_handler(event, context):\n    # Batch size is 1, so an unhandled exception retries this SQS message.\n    for sqs_record in event[\"Records\"]:\n        envelope = json.loads(sqs_record[\"body\"])\n        for s3_record in envelope.get(\"Records\", []):\n            bucket = s3_record[\"s3\"][\"bucket\"][\"name\"]\n            key = unquote_plus(s3_record[\"s3\"][\"object\"][\"key\"])\n\n            # Ignore any unexpected event outside our upload prefix.\n            if not key.startswith(\"uploads/\"):\n                continue\n\n            # HEAD returns metadata without downloading the document.\n            metadata = s3.head_object(Bucket=bucket, Key=key)\n            size = metadata[\"ContentLength\"]\n            valid_type = key.lower().endswith(ALLOWED_EXTENSIONS)\n            status = \"SUCCESS\" if valid_type and 0 < size <= MAX_BYTES else \"REJECTED\"\n\n            message = (\n                f\"File: {key}\\n\"\n                f\"Bucket: {bucket}\\n\"\n                f\"Size: {size} bytes\\n\"\n                f\"Status: {status}\\n\"\n                \"Validation: extension is PDF/JPG/PNG and size is 1 byte to 5 MiB\"\n            )\n            sns.publish(\n                TopicArn=TOPIC_ARN,\n                Subject=f\"Document validation: {status}\",\n                Message=message,\n            )\n            log.info(\"Processed bucket=%s key=%s status=%s\", bucket, key, status)\n\n    return {\"statusCode\": 200, \"message\": \"SQS batch completed\"}\n"};document.querySelectorAll('button[data-file]').forEach(btn=>btn.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(FILES[btn.dataset.file]);btn.textContent='Copied ✓';btn.classList.add('copied');setTimeout(()=>{btn.textContent='Copy code';btn.classList.remove('copied')},1600)}catch(e){const ta=document.createElement('textarea');ta.value=FILES[btn.dataset.file];document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();btn.textContent='Copied ✓';setTimeout(()=>btn.textContent='Copy code',1600)}}));document.querySelectorAll('.copy-cli').forEach(btn=>btn.addEventListener('click',async()=>{const txt=btn.parentElement.querySelector('pre').textContent;try{await navigator.clipboard.writeText(txt)}catch(e){const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove()}btn.textContent='Copied ✓';setTimeout(()=>btn.textContent='Copy',1600)}));</script></body></html>

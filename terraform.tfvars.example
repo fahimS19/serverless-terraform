@@ -1,0 +1,4 @@
+aws_region         = "ap-southeast-1"
+project_name       = "document-pipeline"
+environment        = "demo"
+notification_email = "you@example.com"
