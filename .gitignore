@@ -1,5 +1,6 @@
 # Terraform state and local files
 .terraform/
+.terraform*
 *.tfstate
 *.tfstate.*
 *.tfplan
@@ -9,5 +10,5 @@ crash.log
 
 # Build artifact
 processor.zip
-
+fahim*
 # Keep provider lock file committed for reproducibility.
